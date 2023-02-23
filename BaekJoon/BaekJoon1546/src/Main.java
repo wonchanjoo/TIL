@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.Scanner;
 
 /*
@@ -18,14 +17,16 @@ public class Main {
         for(int i=0; i<N; i++)
             nums[i] = sc.nextInt();
 
-        double max = Arrays.stream(nums).asDoubleStream().max().getAsDouble();
+        int max = nums[0];
+        for(int i=1; i<N; i++)
+            if(nums[i] > max)
+                max = nums[i];
 
         double sum = 0.0;
-        for(int i=0; i<N; i++) {
-            double d = nums[i] / max * 100.0;
-            sum += d;
-        }
+        for(int i=0; i<N; i++)
+            sum += nums[i];
 
-        System.out.println(sum / N);
+        double newAverage = sum / max * 100 / N;
+        System.out.println(newAverage);
     }
 }
