@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="bde08f0c-e8b2-42c0-aba4-5dd6aac2cec6" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/BaekJoon11659/BaekJoon11659.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BaekJoon11659/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/BaekJoon11659/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BaekJoon11660/BaekJoon11660.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BaekJoon1546/BaekJoon1546.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BaekJoon1546/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/BaekJoon1546/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BaekJoon1940/BaekJoon1940.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BaekJoon2018/BaekJoon2018.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BeakJoon11720/BeakJoon11720.iml" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2MVa9mKLLGru1VwY3FMERuOMzlR" />
+  <component name="ProjectViewState">
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "/Users/wonchanjoo/CodingTest/BaekJoon",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="bde08f0c-e8b2-42c0-aba4-5dd6aac2cec6" name="Changes" comment="" />
+      <created>1677855057576</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1677855057576</updated>
+      <workItem from="1677855058675" duration="61000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
