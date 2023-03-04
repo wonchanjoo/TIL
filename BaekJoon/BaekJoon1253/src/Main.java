@@ -17,19 +17,20 @@ public class Main {
         Arrays.sort(A);
 
         int count = 0;
-        for(int i = 2; i < N; i++) {
-            for(int j = 0; j < i; j++) {
-                for(int k = j + 1; k < i; k++) {
-                    if(A[i] == (A[j] + A[k])) {
-                        count++;
-                        break;
-                    }
-                    else if(A[i] < (A[j] + A[k]))
-                        break;
+        for (int i = 2; i < N; i++) {
+            int start = 0;
+            int end = N - 1;
+            while(start < end) {
+                if(A[start] + A[end] == A[i]) {
+
+                    break;
+                } else if(A[start] + A[end] < A[i]) {
+                    start++;
+                } else {
+                    end--;
                 }
             }
         }
-
         System.out.println(count);
     }
 }
