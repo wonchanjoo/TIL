@@ -19,6 +19,7 @@
 | ----- | ---------------- | ------------------------------------- | ---------- | --------- |
 | 1253  | 좋다             | https://www.acmicpc.net/problem/1253  | 골드 4     | X         |
 | 1546  | 평균             | https://www.acmicpc.net/problem/1546  | 브론즈 1   | O         |
+| 1874  | 스택 수열        | https://www.acmicpc.net/problem/1874  | 실버 2     | O         |
 | 1940  | 주몽             | https://www.acmicpc.net/problem/1940  | 실버 4     | O         |
 | 2018  | 수들의 합 5      | https://www.acmicpc.net/problem/2018  | 실버 5     | O         |
 | 11003 | 최솟값 찾기      | https://www.acmicpc.net/problem/11003 | 플래티넘 5 | X         |
