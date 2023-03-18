@@ -16,25 +16,12 @@ public class Main {
             A[i] = Integer.parseInt(st.nextToken());
         }
 
-        Stack<Integer> stack = new Stack();
-        int p;
-        for (int i = 0; i < N; i++) {
-            stack.clear();
-            p = -1;
-
-            for (int j = i + 1; j < N; j++) {
-                if (A[i] < A[j]) {
-                    stack.push(A[j]);
-                }
-            }
-
-            if (!stack.isEmpty()) {
-                p = stack.get(0);
-            }
-
-            sb.append(p + " ");
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < N - 1; i++) {
+            if(!stack.isEmpty()) { // 스택이 비어있으면 push
+                stack.push(i);
+            } else if(stack.peek())
         }
-
         System.out.println(sb.toString());
     }
 }
