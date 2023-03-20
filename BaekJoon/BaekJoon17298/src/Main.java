@@ -17,10 +17,19 @@ public class Main {
         }
 
         Stack<Integer> stack = new Stack<>();
-        for (int i = 0; i < N - 1; i++) {
-            if(!stack.isEmpty()) { // 스택이 비어있으면 push
-                stack.push(i);
-            } else if(stack.peek())
+        for (int i = 0; i < N; i++) {
+            while(!stack.isEmpty() && A[stack.peek()] < A[i]) {
+                A[stack.pop()] = A[i];
+            }
+            stack.push(i);
+        }
+
+        while(!stack.isEmpty()) {
+            A[stack.pop()] = -1;
+        }
+
+        for (int i = 0; i < N; i++) {
+            sb.append(A[i]).append(' ');
         }
         System.out.println(sb.toString());
     }
