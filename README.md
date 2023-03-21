@@ -22,9 +22,12 @@
 | 1874  | 스택 수열        | https://www.acmicpc.net/problem/1874  | 실버 2     | O         |
 | 1940  | 주몽             | https://www.acmicpc.net/problem/1940  | 실버 4     | O         |
 | 2018  | 수들의 합 5      | https://www.acmicpc.net/problem/2018  | 실버 5     | O         |
+| 2470  | 두 용액          | https://www.acmicpc.net/problem/2470  | 골드 5     | O         |
+| 3273  | 두 수의 합       | https://www.acmicpc.net/problem/3273  | 실버 3     | O         |
 | 11003 | 최솟값 찾기      | https://www.acmicpc.net/problem/11003 | 플래티넘 5 | X         |
 | 11659 | 구간 합 구하기 4 | https://www.acmicpc.net/problem/11659 | 실버 3     | X         |
 | 11660 | 구간 합 구하기 5 | https://www.acmicpc.net/problem/11660 | 실버 1     | O         |
 | 11720 | 숫자의 합        | https://www.acmicpc.net/problem/11720 | 브론즈 4   | O         |
 | 12891 | DNA 비밀번호     | https://www.acmicpc.net/problem/12891 | 실버 2     | O         |
+| 17298 | 오큰수           | https://www.acmicpc.net/problem/17298 | 골드 4     | *         |
 
