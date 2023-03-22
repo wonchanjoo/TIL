@@ -16,7 +16,6 @@ public class Main {
         for (int i = 0; i < N; i++) {
             A[i] = Integer.parseInt(st.nextToken());
         }
-
         int[] B = A.clone();
         Arrays.sort(B);
 
