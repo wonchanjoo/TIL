@@ -25,7 +25,7 @@ public class Main {
         } else {
             int temp;
             for(int i = M / N; i <= sum / N; i++) {
-                
+
             }
         }
     }
