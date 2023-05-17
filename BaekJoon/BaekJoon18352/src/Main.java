@@ -4,24 +4,24 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class Main {
-    static int K;
-    static ArrayList<Integer> answer = new ArrayList<>();
-    static ArrayList<Integer>[] graph;
-    static boolean[] visited;
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static final int INF = -1;
 
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+       new Main().solution();
+    }
 
+    private void solution() throws IOException {
         StringTokenizer st = new StringTokenizer(br.readLine());
         int N = Integer.parseInt(st.nextToken());
-        graph = new ArrayList[N + 1];
-        for(int i = 0; i < graph.length; i++) {
+        int M = Integer.parseInt(st.nextToken());
+        int K = Integer.parseInt(st.nextToken());
+        int X = Integer.parseInt(st.nextToken());
+
+        List<Integer>[] graph = new List[N + 1];
+        for(int i = 1; i <= N; i++) {
             graph[i] = new ArrayList<>();
         }
-        visited = new boolean[N + 1];
-        int M = Integer.parseInt(st.nextToken());
-        K = Integer.parseInt(st.nextToken());
-        int X = Integer.parseInt(st.nextToken());
         for(int i = 0; i < M; i++) {
             st = new StringTokenizer(br.readLine());
             int A = Integer.parseInt(st.nextToken());
@@ -29,37 +29,35 @@ public class Main {
             graph[A].add(B);
         }
 
-        bfs(X);
+        List<Integer> answer = new ArrayList<>();
+        int[] dist = new int[N + 1]; // 최단거리
+        Arrays.fill(dist, INF); // -1로 초기화
+        Queue<Integer> q = new ArrayDeque<>();
+        q.add(X);
+        dist[X] = 0;
 
-        if(answer.size() == 0) {
-            System.out.println(-1);
-        } else {
-            StringBuilder sb = new StringBuilder();
-            Collections.sort(answer);
-            for(int i = 0; i < answer.size(); i++) {
-                sb.append(answer.get(i)).append('\n');
+        while (!q.isEmpty()) {
+            int cur = q.poll();
+            if(dist[cur] > K) break;
+            if(dist[cur] == K) {
+                answer.add(cur);
+                continue;
             }
-            System.out.println(sb.toString());
-        }
-    }
 
-    private static void bfs(int start) {
-        Queue<Integer[]> queue = new LinkedList<>();
-        queue.offer(new Integer[]{start, 0});
-        visited[start] = true;
-
-        while(!queue.isEmpty()) {
-            Integer[] n = queue.poll();
-            for(int i = 0; i < graph[n[0]].size(); i++) {
-                if(!visited[graph[n[0]].get(i)]) {
-                    visited[graph[n[0]].get(i)] = true;
-                    if(n[1] + 1 == K) {
-                        answer.add(graph[n[0]].get(i));
-                        continue;
-                    }
-                    queue.offer(new Integer[]{graph[n[0]].get(i), n[1] + 1});
+            for (int next : graph[cur]) {
+                if(dist[next] == INF) {
+                    dist[next] = dist[cur] + 1;
+                    q.add(next);
                 }
             }
         }
+
+        Collections.sort(answer);
+        StringBuilder sb = new StringBuilder();
+        for (int a : answer) {
+            sb.append(a).append('\n');
+        }
+
+        System.out.println(answer.isEmpty() ? -1 : sb);
     }
 }
