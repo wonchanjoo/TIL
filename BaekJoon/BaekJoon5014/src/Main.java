@@ -6,48 +6,46 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
+
+    private static int F;
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int F = Integer.parseInt(st.nextToken());
+        F = Integer.parseInt(st.nextToken());
         int S = Integer.parseInt(st.nextToken()); // 현재 위치
         int G = Integer.parseInt(st.nextToken()); // 스타트링크 위치
         int U = Integer.parseInt(st.nextToken());
         int D = Integer.parseInt(st.nextToken());
-        if(U == 0 || D == 0) {
-            System.out.println("use the stairs");
-            return;
-        }
 
         boolean[] visited = new boolean[F + 1];
-        Queue<Integer> q = new LinkedList<>();
-        int count = 0;
-        q.add(S);
+        int count = -1;
+        boolean find = false;
 
-        while (!q.isEmpty()) {
-            int n = q.poll();
-            visited[n] = true;
+        while (true) {
+            if(visited[S]) {
+                break;
+            }
+            visited[S] = true;
+            count++;
 
-            if(n < G) {
-                if(n + U > F && !visited[n - D]) {
-                    q.add(n - D);
-                } else if(!visited[n + U]){
-                    q.add(n + U);
-                }
-                count++;
-            } else if(n > G) {
-                if(n - D < 1 && !visited[n + U]) {
-                    q.add(n + U);
-                } else if(!visited[n - D]){
-                    q.add(n - D);
-                }
-                count++;
-            } else {
+            if(S < G) {
+                if((S + U) <= F)
+                    S += U;
+                else if((S - D) > 0)
+                    S -= D;
+            } else if(S > G) {
+                if((S - D) > 0)
+                    S -= D;
+                else if((S + U) <= F)
+                    S += U;
+            } else { // 도착
+                find = true;
                 break;
             }
         }
 
-        if(q.isEmpty())
+        if(find)
             System.out.println(count);
         else
             System.out.println("use the stairs");
