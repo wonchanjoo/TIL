@@ -5,17 +5,14 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
-/*
-1인 모~든 지점에서 같이 상하좌우 익혀야됨.
-하나의 점에서 시작하는게 아님
- */
 public class Main {
 
-    static int N, M, count;
+    static int N, M;
     static int[][] map;
     static int[][] visited;
     static int[] dirR = {-1, 1, 0, 0}; // 상 하 좌 우
     static int[] dirC = {0, 0, -1, 1}; // 상 하 좌 우
+    static Queue<Integer[]> q = new LinkedList<>();
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -26,74 +23,47 @@ public class Main {
         visited = new int[N][M];
         for(int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
-            for (int j = 0; j < M; j++)
+            for (int j = 0; j < M; j++) {
                 map[i][j] = Integer.parseInt(st.nextToken());
-        }
 
-        for(int i = 0; i < N; i++) {
-            for(int j = 0; j < M; j++) {
-                if(map[i][j] == 1)
-                    bfs(i, j);
-
+                if(map[i][j] == 1) // 시작할 좌표들을 큐에 넣어준다.
+                    q.offer(new Integer[]{i, j});
             }
         }
-        print();
-        // 전부 다 익었는지 판단
+
+        int day = 0;
+        while (!q.isEmpty()) {
+            int r = q.peek()[0];
+            int c = q.poll()[1];
+            day = Math.max(visited[r][c], day);
+
+            for(int i = 0; i < 4; i++) {
+                int newR = r + dirR[i];
+                int newC = c + dirC[i];
+
+                if(isRight(newR, newC) && map[newR][newC] == 0) {
+                    map[newR][newC] = 1;
+                    visited[newR][newC] = visited[r][c] + 1;
+                    q.offer(new Integer[]{newR, newC});
+                }
+            }
+        }
+
         boolean result = true;
         for(int i = 0; i < N; i++)
             for(int j = 0; j < M; j++)
                 if(map[i][j] == 0) {
                     result = false;
-                    i = N;
                     break;
                 }
 
         if(result)
-            System.out.println(count);
+            System.out.println(day);
         else
             System.out.println(-1);
     }
 
-    // map[r][c]의 상하좌우를 익힌 토마토로 바꾼다
-    private static void bfs(int r, int c) {
-        Queue<Integer[]> q = new LinkedList<>();
-        q.offer(new Integer[]{r, c});
-        map[r][c] = 1;
-
-        while(!q.isEmpty()) {
-            Integer[] old = q.poll();
-            int oldR = old[0];
-            int oldC = old[1];
-            count = visited[oldR][oldC];
-
-            // 상하좌우에 안 익은 것이 있는 경우
-            for (int i = 0; i < 4; i++) {
-                int newR = oldR + dirR[i];
-                int newC = oldC + dirC[i];
-                if (isRight(newR, newC) && visited[newR][newC] == 0 && map[newR][newC] == 0) {
-                    visited[newR][newC] = visited[oldR][oldC] + 1;
-                    map[newR][newC] = 1;
-                    q.offer(new Integer[]{newR, newC});
-                }
-            }
-        }
-    }
-
     private static boolean isRight(int r, int c) {
         return (r >= 0) && (c >= 0) && (r < N) && (c < M);
-    }
-
-    private static void print() {
-        for(int i = 0; i < N; i++) {
-            for(int j = 0; j < M; j++)
-                System.out.print(map[i][j] + " ");
-            System.out.println();
-        }
-
-        for(int i = 0; i < N; i++) {
-            for(int j = 0; j < M; j++)
-                System.out.print(visited[i][j] + " ");
-            System.out.println();
-        }
     }
 }
