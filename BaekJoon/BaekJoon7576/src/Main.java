@@ -26,7 +26,7 @@ public class Main {
             for (int j = 0; j < M; j++) {
                 map[i][j] = Integer.parseInt(st.nextToken());
 
-                if(map[i][j] == 1) // 시작할 좌표들을 큐에 넣어준다.
+                if(map[i][j] == 1) // 맨 처음에 시작할 좌표들을 큐에 넣어준다.
                     q.offer(new Integer[]{i, j});
             }
         }
@@ -49,6 +49,7 @@ public class Main {
             }
         }
 
+	// 안 익은 토마토가 있는지 확인
         boolean result = true;
         for(int i = 0; i < N; i++)
             for(int j = 0; j < M; j++)
