@@ -42,7 +42,7 @@ public class Main {
             int count = sum(0, p.idx - 1);
 
             // 3. 등수이므로 +1 한 뒤, 배열에 저장한다
-            answer[i] = count + 1;
+            answer[p.idx] = count + 1;
         }
 
         // 등수 출력
