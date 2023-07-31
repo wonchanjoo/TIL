@@ -1,18 +1,15 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Main {
 
     static int V, E, K;
-    static int[] D;
+    static int[] distance;
     static boolean[] visited;
     static ArrayList[] graph;
-    static Deque<Integer> queue = new ArrayDeque<>();
+    static PriorityQueue<Edge> queue = new PriorityQueue<>();
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -36,32 +33,30 @@ public class Main {
             graph[u].add(new Edge(v, w));
         }
 
-        // 초깃값
-        D[K] = 0;
-        queue.offer(K);
-        visited[K] = true;
+        queue.offer(new Edge(K, 0));
+        distance[K] = 0;
 
         while (!queue.isEmpty()) {
-            int n = queue.poll();
+            Edge curr = queue.poll();
 
-            for (int i = 0; i < graph[n].size(); i++) {
-                Edge e = (Edge) graph[n].get(i);
+            if (visited[curr.vertex])  continue;
 
-                if (D[e.vertex] > D[n] + e.weight)
-                    D[e.vertex] = D[n] + e.weight;
+            visited[curr.vertex] = true;
+            for (int i = 0; i < graph[curr.vertex].size(); i++) {
+                Edge e = (Edge) graph[curr.vertex].get(i);
 
-                if (!visited[e.vertex]) {
-                    queue.offer(e.vertex);
-                    visited[e.vertex] = true;
+                if (distance[e.vertex] > distance[curr.vertex] + e.weight) {
+                    distance[e.vertex] = distance[curr.vertex]+e.weight;
+                    queue.offer(new Edge(e.vertex, distance[e.vertex]));
                 }
             }
         }
 
         for (int i = 1; i <= V; i++) {
-            if (D[i] == Integer.MAX_VALUE)
+            if (distance[i] == Integer.MAX_VALUE)
                 sb.append("INF").append('\n');
             else
-                sb.append(D[i]).append('\n');
+                sb.append(distance[i]).append('\n');
         }
         System.out.println(sb);
     }
@@ -73,18 +68,23 @@ public class Main {
     }
 
     private static void initArr() {
-        D = new int[V + 1];
+        distance = new int[V + 1];
         for (int i = 1; i <= V; i++) {
-            D[i] = Integer.MAX_VALUE;
+            distance[i] = Integer.MAX_VALUE;
         }
     }
 
-    static class Edge {
+    static class Edge implements Comparable<Edge> {
         int vertex, weight;
 
         public Edge(int vertex, int weight) {
             this.vertex = vertex;
             this.weight = weight;
+        }
+
+        @Override
+        public int compareTo(Edge e) {
+            return this.weight - e.weight;
         }
     }
 }
