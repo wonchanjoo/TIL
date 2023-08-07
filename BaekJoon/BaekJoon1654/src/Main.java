@@ -7,7 +7,6 @@ public class Main {
 
     static int K, N;    // K: 오영식이 이미 가지고 있는 랜선의 개수 / N: 필요한 랜선의 개수
     static int[] LAN;
-    static int answer = 0;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -23,34 +22,23 @@ public class Main {
             if (min > LAN[i])   min = LAN[i];
         }
 
-        int L = 0;
-        int R = min;
-        while (L <= R) {
-            int mid = (L + R) / 2;
-            int result = cutting(mid);
+        long L = 0;
+        long R = min + 1; // 입력 받은 랜선의 길이 중 가장 짧은 것
+        while (L < R) {
+            long mid = (L + R) / 2;
+            long count = 0;
 
-            if (result == 0) {
+            for (int i = 0; i < K; i++) {
+                count += LAN[i] / mid;
+            }
+
+            if (count < N) {
                 R = mid;
             } else {
                 L = mid + 1;
             }
         }
 
-        System.out.println(answer);
-    }
-
-    // length: 자르는 길이
-    private static int cutting(int length) {
-        int count = 0;
-
-        for (int lan : LAN) {
-            count += lan / length;
-        }
-
-        if (count < N) {
-            return 0;
-        } else {
-            return length * count;
-        }
+        System.out.println(L - 1);
     }
 }
