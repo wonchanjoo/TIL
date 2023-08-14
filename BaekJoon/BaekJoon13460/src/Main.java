@@ -85,18 +85,21 @@ public class Main {
         // 끝까지 이동한 경우
         else {
             if (red.goal) {
-                if (blue.goal) {
-                    return;
-                } else {
+                if (!blue.goal) {
                     answer = Math.min(answer, count);
-                    return;
                 }
+                return;
             }
+
             for (int i = 0; i < 4; i++) {
+                if (dirIdx % 2 + i % 2 == 1)
+                    continue;
+
                 nextRed = new Point(red.r + dirR[i], red.c + dirC[i], red.goal);
                 nextBlue = new Point(blue.r + dirR[i], blue.c + dirC[i], blue.goal);
 
                 if (rangeIn(nextRed.r, nextRed.c) && board[nextRed.r][nextRed.c] != '#') {
+                    System.out.println("(" + red.r + ", " + red.c + ") 에서 " + i + "로 이동");
                     dfs(nextRed, nextBlue, i, count + 1);
                 }
             }
