@@ -1,15 +1,14 @@
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Main {
 
-    static int N, M;
-    static char[][] board;
-    static Point R, B;
-    static int answer = 11;
+    static int N, M; // N: 세로 / M: 가로
+    static char[][] map;
+    static Bead red, blue;
+    static int answer = Integer.MAX_VALUE;
 
     static int[] dirR = {-1, 1, 0, 0};
     static int[] dirC = {0, 0, -1, 1};
@@ -21,86 +20,90 @@ public class Main {
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
 
-        board = new char[N][M];
+        map = new char[N][M];
 
         for (int r = 0; r < N; r++) {
             String s = br.readLine();
             for (int c = 0; c < M; c++) {
-                board[r][c] = s.charAt(c);
+                char ch = s.charAt(c);
+                map[r][c] = ch;
 
-                if (board[r][c] == 'R') {
-                    R = new Point(r, c, false);
-                    board[r][c] = '.';
-                }
-                if (board[r][c] == 'B') {
-                    B = new Point(r, c, false);
-                    board[r][c] = '.';
+                if (ch == 'B') {
+                    blue = new Bead(r, c, -1);
+                    map[r][c] = '.';
+                } else if (ch == 'R') {
+                    red = new Bead(r, c, -1);
+                    map[r][c] = '.';
                 }
             }
         }
 
-        for (int i = 0; i < 4; i++) {
-            Point nextRed = new Point(R.r + dirR[i], R.c + dirC[i], false);
-            Point nextBlue = new Point(B.r + dirR[i], B.c + dirC[i], false);
+        start();
 
-            if (board[nextRed.r][nextRed.c] != '#') {
-                dfs(nextRed, nextBlue, i, 1);
-            }
-        }
-
-        if (answer == 11)
+        if (answer == Integer.MAX_VALUE) {
             System.out.println(-1);
-        else
+        } else {
             System.out.println(answer);
+        }
     }
 
-    private static void dfs(Point red, Point blue, int dirIdx, int count) {
-        // 파란 구슬만 끝까지 간 경우 그대로 머물도록
-        if (board[blue.r][blue.c] == '#') {
-            blue.r -= dirR[dirIdx];
-            blue.c -= dirC[dirIdx];
+    private static void start() {
+        Deque<Bead[]> queue = new ArrayDeque<>();
+
+        // 시작점
+        for (int i = 0; i < 4; i++) {
+            Bead r = new Bead(red);
+            Bead b = new Bead(blue);
+            r.d = b.d = i;
+
+            boolean moveR = r.move(b);
+            boolean moveB = b.move(r);
+            if (moveR || moveB) {
+                queue.offer(new Bead[]{r, b});
+            }
         }
 
-        // 탈출 조건
-        if (count > 10 || ((!red.goal && !blue.goal) && red.r == blue.r && red.c == blue.c)) {
-            return;
-        }
+        while (!queue.isEmpty()) {
+            Bead[] beads = queue.poll();
 
-        // 빨간 구슬이 구멍에 들어간 경우
-        if (board[red.r][red.c] == 'O') {
-            red.goal = true;
-        }
-        // 파란 구슬이 구멍에 들어간 경우
-        if (board[blue.r][blue.c] == 'O') {
-            blue.goal = true;
-        }
-
-        // 다음 칸으로 이동
-        Point nextRed = new Point(red.r + dirR[dirIdx], red.c + dirC[dirIdx], red.goal);
-        Point nextBlue = new Point(blue.r + dirR[dirIdx], blue.c + dirC[dirIdx], blue.goal);
-
-        if (rangeIn(nextRed.r, nextRed.c) && board[nextRed.r][nextRed.c] != '#') {
-            dfs(nextRed, nextBlue, dirIdx, count);
-        }
-        // 끝까지 이동한 경우
-        else {
-            if (red.goal) {
-                if (!blue.goal) {
-                    answer = Math.min(answer, count);
-                }
-                return;
+            // 탈출 조건
+            if (beads[0].count > 10 || beads[0].count >= answer) {
+                continue;
             }
 
-            for (int i = 0; i < 4; i++) {
-                if (dirIdx % 2 + i % 2 == 1)
+            // 둘 중 하나라도 이동이 가능하면 계속 간다.
+            if (beads[0].move(beads[1]) || beads[1].move(beads[0])) {
+                queue.offer(Arrays.copyOf(beads, beads.length));
+            }
+            // 둘 다 이동할 수 없는 경우
+            else {
+                // 파란 구슬이 구멍에 들어간 경우
+                if (beads[1].goal) {
                     continue;
+                }
+                // 빨간 구슬이 구멍에 들어간 경우
+                if (beads[0].goal) {
+                    answer = Math.min(answer, beads[0].count);
+                    continue;
+                }
 
-                nextRed = new Point(red.r + dirR[i], red.c + dirC[i], red.goal);
-                nextBlue = new Point(blue.r + dirR[i], blue.c + dirC[i], blue.goal);
 
-                if (rangeIn(nextRed.r, nextRed.c) && board[nextRed.r][nextRed.c] != '#') {
-                    System.out.println("(" + red.r + ", " + red.c + ") 에서 " + i + "로 이동");
-                    dfs(nextRed, nextBlue, i, count + 1);
+                for (int i = 0; i < 4; i++) {
+                    // 원래 방향과 왔던 길은 제외
+                    if (i == beads[0].d || (i + beads[0].d == 1 || i + beads[0].d == 5)) {
+                        continue;
+                    }
+
+                    Bead tmpR = new Bead(beads[0]);
+                    Bead tmpB = new Bead(beads[1]);
+
+                    tmpR.d = tmpB.d = i; // 방향 전환
+                    // 둘 중 하나라도 새로운 방향으로 이동 가능한 경우
+                    if (tmpR.move(tmpB) || tmpB.move(tmpR)) {
+                        tmpR.count++;
+                        tmpB.count++;
+                        queue.offer(new Bead[]{tmpR, tmpB});
+                    }
                 }
             }
         }
@@ -110,14 +113,55 @@ public class Main {
         return (r >= 0) && (c >= 0) && (r < N) && (c < M);
     }
 
-    static class Point {
-        int r, c;
-        boolean goal = false;
+    static class Bead {
+        int r, c, d;
+        int count = 1;
+        boolean goal;
 
-        public Point(int r, int c, boolean goal) {
+        public Bead(int r, int c, int d) {
             this.r = r;
             this.c = c;
-            this.goal = goal;
+            this.d = d;
+        }
+
+        public Bead(Bead bead) {
+            this.r = bead.r;
+            this.c = bead.c;
+            this.d = bead.d;
+            this.count = bead.count;
+        }
+
+        private boolean move(Bead other) {
+            int tmpR = this.r;
+            int tmpC = this.c;
+
+            // d 방향으로 이동
+            this.r += dirR[d];
+            this.c += dirC[d];
+
+            // 이동할 수 있는 경우
+            if (rangeIn(r, c) && map[r][c] != '#' && !this.equals(other)) {
+
+                // 구멍에 들어간 경우
+                if (map[r][c] == 'O') {
+                    goal = true;
+                    this.r = this.c = 0; // 더 이상 이동할 수 없도록
+                }
+
+                return true;
+            }
+            // 이동할 수 없는 경우
+            else {
+                this.r = tmpR;
+                this.c = tmpC;
+                return false;
+            }
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            Bead bead = (Bead) obj;
+            return this.r == bead.r && this.c == bead.c;
         }
     }
 }
