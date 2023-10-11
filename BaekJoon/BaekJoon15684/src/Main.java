@@ -1,8 +1,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -64,43 +62,24 @@ public class Main {
 
     // i번의 세로선의 결과가 i번이 나오는지 확인
     private static boolean pass() {
-        for (int c = 1; c <= N; c++) {
-            Deque<Point> queue = new ArrayDeque<>();
-            queue.offer(new Point(1, c));
+        for (int i = 1; i <= N; i++) {
+            int r = 1;
+            int c = i;
 
-            while (true) {
-                if (queue.peek().r > H) {
-                    break;
+            for (int j = 1; j <= H; j++) {
+                if (ladder[r][c] == 1) {
+                    c--;
+                } else if (ladder[r][c] == 2) {
+                    c++;
                 }
-                Point now = queue.poll();
-
-                switch (ladder[now.r][now.c]) {
-                    case 0:
-                        queue.offer(new Point(now.r + 1, now.c));
-                        break;
-                    case 1:
-                        queue.offer(new Point(now.r + 1, now.c - 1));
-                        break;
-                    case 2:
-                        queue.offer(new Point(now.r + 1, now.c + 1));
-                        break;
-                }
+                r++;
             }
 
-            if (queue.poll().c != c) {
+            if (c != i) {
                 return false;
             }
         }
 
         return true;
-    }
-
-    static class Point {
-        int r, c;
-
-        public Point(int r, int c) {
-            this.r = r;
-            this.c = c;
-        }
     }
 }
