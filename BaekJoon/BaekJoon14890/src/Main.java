@@ -33,10 +33,10 @@ public class Main {
         initCountArr();
 
         for (int i = 0; i < N; i++) {
-            if (pass(i, 0, 0)) {
+            if (horizontalPass(i)) {
                 answer++;
             }
-            if (pass(0, i, 1)) {
+            if (verticalPass(i)) {
                 answer++;
             }
         }
@@ -81,54 +81,58 @@ public class Main {
         }
     }
 
-    // (r, c)에서 direction 방향으로 지나갈 수 있는지
-    private static boolean pass(int r, int c, int direction) {
+    // i번째 행의 경사로 설치 가능 여부 반환
+    private static boolean horizontalPass(int i) {
         installed = new boolean[N];
 
-        if (direction == 0) {
-            for (int i = c + 1; i < N; i++) {
-                if (map[r][i - 1] != map[r][i]) {
-                    // 1. 높이 차가 1이 아닌 경우
-                    if (Math.abs(map[r][i - 1] - map[r][i]) != 1) {
-                        return false;
-                    }
+        for (int j = 1; j < N; j++) {
+            if (map[i][j - 1] != map[i][j]) {
+                // 1. 높이 차가 1이 아닌 경우
+                if (Math.abs(map[i][j - 1] - map[i][j]) != 1) {
+                    return false;
+                }
 
-                    int minC = (map[r][i - 1] < map[r][i]) ? (i - 1) : i; // 낮은 칸의 인덱스
-                    boolean left = (map[r][i - 1] < map[r][i]) ? true : false;
+                int min = (map[i][j - 1] < map[i][j]) ? (j - 1) : j; // 낮은 칸의 열 번호
+                boolean left = map[i][j - 1] < map[i][j];
 
-                    // 2. 경사로를 설치할 칸이 부족한 경우
-                    if (horizontal[r][minC] < L) {
-                        return false;
-                    }
+                // 2. 경사로를 설치할 칸이 부족한 병우
+                if (horizontal[i][min] < L) {
+                    return false;
+                }
 
-                    boolean possible = installSlope(minC, left);
-
-                    // 3. 이미 경사로가 설치된 경우
-                    if (!possible) {
-                        return false;
-                    }
+                boolean possible = installSlope(min, left);
+                // 3. 이미 경사로가 설치된 경우
+                if (!possible) {
+                    return false;
                 }
             }
         }
-        else {
-            for (int i = r + 1; i < N; i++) {
-                if (map[i - 1][c] != map[i][c]) {
-                    if (Math.abs(map[i - 1][c] - map[i][c]) != 1) {
-                        return false;
-                    }
 
-                    int minR = (map[i - 1][c] < map[i][c]) ? (i - 1) : i; // 낮은 칸의 인덱스
-                    boolean left = (map[i - 1][c] < map[i][c]) ? true : false;
+        return true;
+    }
+    // i번째 열의 경사로 설치 가능 여부 반환
+    private static boolean verticalPass(int i) {
+        installed = new boolean[N];
 
-                    if (vertical[minR][c] < L) {
-                        return false;
-                    }
+        for (int j = 1; j < N; j++) {
+            if (map[j - 1][i] != map[j][i]) {
+                // 1. 높이 차가 1이 아닌 경우
+                if (Math.abs(map[j - 1][i] - map[j][i]) != 1) {
+                    return false;
+                }
 
-                    boolean possible = installSlope(minR, left);
+                int min = (map[j - 1][i] < map[j][i]) ? (j - 1) : j; // 낮은 칸의 열 번호
+                boolean left = map[j - 1][i] < map[j][i];
 
-                    if (!possible) {
-                        return false;
-                    }
+                // 2. 경사로를 설치할 칸이 부족한 병우
+                if (vertical[min][i] < L) {
+                    return false;
+                }
+
+                boolean possible = installSlope(min, left);
+                // 3. 이미 경사로가 설치된 경우
+                if (!possible) {
+                    return false;
                 }
             }
         }
@@ -136,6 +140,7 @@ public class Main {
         return true;
     }
 
+    // i에서 L만큼 경사로 설치, 불가능한 경우 false 반환
     private static boolean installSlope(int i, boolean left) {
         if (left) {
             for (int j = i; j > (i - L); j--) {
