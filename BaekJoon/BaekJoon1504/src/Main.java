@@ -11,7 +11,6 @@ public class Main {
     static int N, E, v1, v2;
     static List<Edge>[] adjList;
     static int[] dist;
-    static boolean[] visited;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -29,7 +28,7 @@ public class Main {
             int c = Integer.parseInt(st.nextToken());
 
             adjList[a].add(new Edge(b, c));
-            adjList[b].add(new Edge(b, c));
+            adjList[b].add(new Edge(a, c));
         }
 
         st = new StringTokenizer(br.readLine());
@@ -37,16 +36,34 @@ public class Main {
         v2 = Integer.parseInt(st.nextToken());
 
         // 1 -> v1 -> v2 -> N
-        int answer1 = dijkstra(1, v1);
-        answer1 += dijkstra(v1, v2);
-        answer1 += dijkstra(v2, N);
+        int[] path = {1, v1, v2, N};
+        int answer1 = 0;
+        for (int i = 0; i < 3; i++) {
+            int distance = dijkstra(path[i], path[i + 1]);
+            if (distance == Integer.MAX_VALUE) {
+                answer1 = Integer.MAX_VALUE;
+                break;
+            }
+            answer1 += distance;
+        }
 
         // 1 -> v2 -> v1 -> N
-        int answer2 = dijkstra(1, v2);
-        answer2 += dijkstra(v2, v1);
-        answer2 += dijkstra(v1, N);
+        path = new int[]{1, v2, v1, N};
+        int answer2 = 0;
+        for (int i = 0; i < 3; i++) {
+            int distance = dijkstra(path[i], path[i + 1]);
+            if (distance == Integer.MAX_VALUE) {
+                answer2 = Integer.MAX_VALUE;
+                break;
+            }
+            answer2 += distance;
+        }
 
-        System.out.println(Math.min(answer1, answer2));
+        if (answer1 == Integer.MAX_VALUE && answer2 == Integer.MAX_VALUE) {
+            System.out.println(-1);
+        } else {
+            System.out.println(Math.min(answer1, answer2));
+        }
     }
 
     private static void initAdjList() {
@@ -67,7 +84,6 @@ public class Main {
     // start ~ end의 최단 경로의 길이를 반환한다.
     private static int dijkstra(int start, int end) {
         initDistArr();
-        visited = new boolean[N + 1];
 
         PriorityQueue<Edge> pq = new PriorityQueue<>();
         pq.offer(new Edge(start, 0));
@@ -76,16 +92,16 @@ public class Main {
         while (!pq.isEmpty()) {
             Edge now = pq.poll();
 
-            if (!visited[now.target]) {
-                visited[now.target] = true;
+            if (dist[now.target] < now.weight) {
+                continue;
+            }
 
-                for (int i = 0; i < adjList[now.target].size(); i++) {
-                    Edge next = adjList[now.target].get(i);
+            for (int i = 0; i < adjList[now.target].size(); i++) {
+                Edge next = adjList[now.target].get(i);
 
-                    if (dist[now.target] + next.weight < dist[next.target]) {
-                        dist[next.target] = dist[now.target] + next.weight;
-                        pq.offer(new Edge(next.target, dist[next.target]));
-                    }
+                if (dist[now.target] + next.weight < dist[next.target]) {
+                    dist[next.target] = dist[now.target] + next.weight;
+                    pq.offer(new Edge(next.target, dist[next.target]));
                 }
             }
         }
