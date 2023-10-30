@@ -6,63 +6,64 @@ import java.util.Deque;
 import java.util.StringTokenizer;
 
 public class Main {
+
+    static final int MIN = 0;
+    static final int MAX = 100001;
+
+    static int N, K;
+    static int[] cost;
+    static boolean[] visited;
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
-        int K = Integer.parseInt(st.nextToken());
+        N = Integer.parseInt(st.nextToken());
+        K = Integer.parseInt(st.nextToken());
 
         if(N == K) {
             System.out.println(0);
             return;
         }
 
-        boolean[] visited = new boolean[100001];
-        int[] second = new int[100001];
+        cost = new int[100001];
+        visited = new boolean[100001];
 
-        Deque<Integer> q = new ArrayDeque<>();
-        q.offer(N);
+        Deque<Integer> deque = new ArrayDeque<>();
+        deque.offer(N);
+        cost[N] = 0;
         visited[N] = true;
-        second[N] = 0;
-        while(!q.isEmpty()) {
-            int i = q.poll();
-            if(i == K)
+
+        int[] next = new int[3];
+        while (!deque.isEmpty()) {
+            int now = deque.poll();
+
+            if (now == K) {
                 break;
-
-            // i - 1
-            if((i - 1) >= 0) {
-                if(!visited[i - 1]) {
-                    visited[i - 1] = true;
-                    second[i - 1] = second[i] + 1;
-                    q.offer(i - 1);
-                } else if(second[i - 1] > second[i] + 1){
-                    second[i - 1] = second[i] + 1;
-                }
             }
 
-            // i + 1
-            if((i + 1) <= 100000 && !visited[i + 1]) {
-                if(!visited[i + 1]) {
-                    visited[i + 1] = true;
-                    second[i + 1] = second[i] + 1;
-                    q.offer(i + 1);
-                } else if(second[i + 1] > second[i] + 1){
-                    second[i + 1] = second[i] + 1;
-                }
+            next[0] = now * 2;
+            if (rangeIn(next[0]) && (!visited[next[0]] || cost[now] < cost[next[0]])) {
+                cost[next[0]] = cost[now];
+                visited[next[0]] = true;
+                deque.offerFirst(next[0]);
             }
 
-            // i * 2
-            if((i * 2 <= 100000)) {
-                if(!visited[i * 2]) {
-                    visited[i * 2] = true;
-                    second[i * 2] = second[i];
-                    q.offer(i * 2);
-                } else if(second[i * 2] > second[i]){
-                    second[i * 2] = second[i];
+            next[1] = now - 1;
+            next[2] = now + 1;
+            for (int i = 1; i <= 2; i++) {
+                if (rangeIn(next[i]) && (!visited[next[i]] || (cost[now] + 1) < cost[next[i]])) {
+                    cost[next[i]] = cost[now] + 1;
+                    visited[next[i]] = true;
+                    deque.offerLast(next[i]);
                 }
             }
         }
 
-        System.out.println(second[K]);
+        System.out.println(cost[K]);
+    }
+
+    static boolean rangeIn(int n) {
+        return (n >= MIN) && (n < MAX);
     }
 }
