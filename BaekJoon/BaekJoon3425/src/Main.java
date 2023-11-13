@@ -4,13 +4,16 @@ import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.List;
 
 public class Main {
+
+    static final int MAX = 1_000_000_000;
 
     static int[] stack = new int[10001];
     static int top = -1;
 
-    static ArrayList<String> commandList = new ArrayList<>();
+    static List<String> commandList = new ArrayList<>();
     static Deque<Integer> numberQueue = new ArrayDeque<>();
     static StringBuilder sb = new StringBuilder();
 
@@ -18,144 +21,146 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         while(true) {
-            String[] command = br.readLine().split(" ");
+            String command = br.readLine();
 
-            if(command[0].equals("QUIT"))  break;
-
-            else if(command[0].equals("END")) {
+            if(command.equals("QUIT")) {
+                break;
+            } else if(command.equals("END")) {
                 int N = Integer.parseInt(br.readLine());
 
-                for (int i = 0; i < N; i++)
+                for (int i = 0; i < N; i++) {
                     numberQueue.offer(Integer.parseInt(br.readLine()));
+                }
 
                 goStack();
                 sb.append('\n');
 
+                // 초기화
                 commandList = new ArrayList<>();
-                numberQueue = new ArrayDeque<>();
                 br.readLine();
+            } else {
+                commandList.add(command);
             }
-
-            else if (command[0].equals("NUM"))
-                commandList.add(command[1]);
-
-            else
-                commandList.add(command[0]);
         }
 
         System.out.println(sb);
     }
 
     private static void goStack() {
-        while(!numberQueue.isEmpty()) {
+        while (!numberQueue.isEmpty()) {
+            top = -1;
             boolean error = false;
-            top = -1; // stack init
             stack[++top] = numberQueue.poll();
 
-            for(int i = 0; i < commandList.size(); i++) {
-                if(error) {
-                    sb.append("ERROR").append('\n');
+            for (String s : commandList) {
+                if (error) {
                     break;
                 }
 
-                String command = commandList.get(i);
-
-                switch (command) {
+                String[] command = s.split(" ");
+                switch (command[0]) {
+                    case "NUM":
+                        int X = Integer.parseInt(command[1]);
+                        stack[++top] = X;
+                        break;
                     case "POP":
-                        if (top == -1)
+                        if (isEmpty()) {
                             error = true;
-                        else
+                        } else {
                             top--;
+                        }
                         break;
                     case "INV":
-                        if (top == -1)
+                        if (isEmpty()) {
                             error = true;
-                        else
+                        } else {
                             stack[top] *= -1;
+                        }
                         break;
                     case "DUP":
-                        if (top == -1)
+                        if (isEmpty()) {
                             error = true;
-                        else
-                            stack[++top] = stack[top - 1];
+                        } else {
+                            stack[top + 1] = stack[top++];
+                        }
                         break;
                     case "SWP":
-                        if (top < 1)
+                        if (size() < 2) {
                             error = true;
-                        else
-                            swap(top, top - 1);
+                        } else {
+                            int tmp = stack[top];
+                            stack[top] = stack[top - 1];
+                            stack[top - 1] = tmp;
+                        }
                         break;
                     case "ADD":
-                        if (top < 1)
+                        if (size() < 2) {
                             error = true;
-                        else {
-                            long temp = stack[top] + stack[top - 1];
-                            if(temp > 1000000000)
+                        } else {
+                            long add = stack[top] + stack[top - 1];
+                            if (Math.abs(add) > MAX) {
                                 error = true;
-                            else
-                                stack[--top] = (int) temp;
+                            } else {
+                                stack[--top] = (int) add;
+                            }
                         }
                         break;
                     case "SUB":
-                        if (top < 1)
+                        if (size() < 2) {
                             error = true;
-                        else
-                            stack[top - 1] = stack[top - 1] - stack[top--];
+                        } else {
+                            long sub = stack[top - 1] - stack[top];
+                            if (Math.abs(sub) > MAX) {
+                                error = true;
+                            } else {
+                                stack[--top] = (int) sub;
+                            }
+                        }
                         break;
                     case "MUL":
-                        if (top < 1)
+                        if (size() < 2) {
                             error = true;
-                        else {
-                            long temp = (long) stack[top] * stack[--top];
-                            if(temp > 1000000000)
+                        } else {
+                            long mul = (long) stack[top] * stack[top - 1];
+                            if (Math.abs(mul) > MAX) {
                                 error = true;
-                            else
-                                stack[top] = (int)temp;
+                            } else {
+                                stack[--top] = (int) mul;
+                            }
                         }
                         break;
                     case "DIV":
-                        if (top < 1 || stack[top] == 0)
+                        if (size() < 2 || stack[top] == 0) {
                             error = true;
-                        else {
-                            int temp = Math.abs(stack[top - 1]) / Math.abs(stack[top]);
-                            if(stack[top - 1] < 0 || stack[top] < 0)
-                                stack[--top] = -temp;
-                            else
-                                stack[--top] = temp;
+                        } else {
+                            int div = stack[top - 1] / stack[top];
+                            stack[--top] = div;
                         }
                         break;
                     case "MOD":
-                        if (top < 1 || stack[top] == 0)
+                        if (size() < 2 || stack[top] == 0) {
                             error = true;
-                        else {
-                            int temp = Math.abs(stack[top - 1]) % Math.abs(stack[top]);
-                            if(stack[top - 1] < 0 || stack[top] < 0)
-                                stack[--top] = -temp;
-                            else
-                                stack[--top] = temp;
+                        } else {
+                            int mod = stack[top - 1] % stack[top];
+                            stack[--top] = mod;
                         }
-                        break;
-                    default:
-                        stack[++top] = Integer.parseInt(command);
                         break;
                 }
             }
-            if(top == 0)
-                sb.append(stack[top]).append('\n');
-            else
-                sb.append("ERROR").append('\n');
+
+            if (error || size() != 1) {
+                sb.append("ERROR\n");
+            } else {
+                sb.append(stack[top--]).append('\n');
+            }
         }
     }
 
-    private static void swap(int idx1, int idx2) {
-        int temp = stack[idx1];
-        stack[idx1] = stack[idx2];
-        stack[idx2] = temp;
+    private static boolean isEmpty() {
+        return top == -1;
     }
 
-    private static void printStack() {
-        for(int i = 0; i <= top; i++)
-            System.out.print(stack[i] + " ");
-        System.out.println();
+    private static int size() {
+        return top + 1;
     }
 }
