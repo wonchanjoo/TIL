@@ -14,8 +14,8 @@ public class Main {
         meetings = new Meeting[N];
 
         for (int i = 0; i < N; i++) {
-            String[] s = br.readLine().split(" ");
-            meetings[i] = new Meeting(Integer.parseInt(s[0]), Integer.parseInt(s[1]));
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            meetings[i] = new Meeting(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
         }
 
         Arrays.sort(meetings);
