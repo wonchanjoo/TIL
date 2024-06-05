@@ -12,7 +12,7 @@ public class Main {
     static char[][] arr;
     static boolean[][] visited;
 
-    static Set<Character> hashSet = new HashSet<>();
+    static boolean[] alpha = new boolean[26];
     static int answer = 0;
 
     public static void main(String[] args) throws IOException {
@@ -32,25 +32,25 @@ public class Main {
         }
 
         visited[0][0] = true;
-        hashSet.add(arr[0][0]);
+        alpha[arr[0][0] - 'A'] = true;
         dfs(0, 0, 1);
 
         System.out.println(answer);
     }
 
     private static void dfs(int r, int c, int count) {
-        answer = Math.max(answer, count);
+        answer = Math.max(count, answer);
 
         for (int i = 0; i < 4; i++) {
             int nextR = r + dr[i];
             int nextC = c + dc[i];
 
-            if (rangeIn(nextR, nextC) && !visited[nextR][nextC] && !hashSet.contains(arr[nextR][nextC])) {
+            if (rangeIn(nextR, nextC) && !visited[nextR][nextC] && !alpha[arr[nextR][nextC] - 'A']) {
                 visited[nextR][nextC] = true;
-                hashSet.add(arr[nextR][nextC]);
+                alpha[arr[nextR][nextC] - 'A'] = true;
                 dfs(nextR, nextC, count + 1);
                 visited[nextR][nextC] = false;
-                hashSet.remove(arr[nextR][nextC]);
+                alpha[arr[nextR][nextC] - 'A'] = false;
             }
         }
     }
