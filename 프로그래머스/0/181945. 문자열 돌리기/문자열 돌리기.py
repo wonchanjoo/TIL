@@ -1,3 +1,2 @@
-str = input()
-for i in range(len(str)):
-    print(str[i])
+for i in input():
+    print(i)
