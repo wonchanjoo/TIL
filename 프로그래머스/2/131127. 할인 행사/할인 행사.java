@@ -3,50 +3,57 @@ import java.util.Map.Entry;
 
 class Solution {
     
-    HashMap<String, Integer> w = new HashMap<>();
-    HashMap<String, Integer> d = new HashMap<>();
+    int answer = 0;
+    Map<String, Integer> w = new HashMap<>();
     
     public int solution(String[] want, int[] number, String[] discount) {
-        int count;
-        
-        // HashMap<제품, 수량> 
-        for(int i = 0; i < want.length; i++)
+        // want, number 배열 -> HashMap 자료구조로 저장
+        for (int i = 0; i < want.length; i++) {
             w.put(want[i], number[i]);
-        
-        // 첫번째 기간
-        for(int i = 0; i < 10; i++) {
-            int temp = d.getOrDefault(discount[i], 0);
-            d.put(discount[i], temp + 1);
         }
         
-        if(discount(d))
-            count = 1;
-        else
-            count = 0;
-        
-        int s = 0, e = 10;
-        while(e < discount.length) {
-            // s 삭제
-            int temp = d.get(discount[s]);
-            d.put(discount[s++], temp - 1);
-            
-            // e 추가
-            temp = d.getOrDefault(discount[e], 0);
-            d.put(discount[e++], temp + 1);
-            
-            if(discount(d))
-                count++;
+        // 처음 1일 ~ 10일
+        for (int i = 0; i < 10; i++) {
+            // 원하는 제품인 경우
+            if (w.containsKey(discount[i])) {
+                w.put(discount[i], w.get(discount[i]) - 1);
+            }
         }
         
-        return count;
+        if (check()) {
+            answer++;
+        }
+        
+        int start = 0;
+        int end = 10;
+        while (end < discount.length) {
+            // 날짜 이동
+            if (w.containsKey(discount[start])) {
+                w.put(discount[start], w.get(discount[start]) + 1);
+            }
+            if (w.containsKey(discount[end])) {
+                w.put(discount[end], w.get(discount[end]) - 1);
+            }
+            
+            
+            if (check()) {
+                answer++;
+            }
+            
+            start++;
+            end++;
+        }
+        
+        return answer;
     }
-    
-    private boolean discount(HashMap<String, Integer> d) {
-        for(Entry<String, Integer> entry: w.entrySet()) {
-            if (d.get(entry.getKey()) != entry.getValue()) {
+
+    private boolean check() {
+        for (String key : w.keySet()) {
+            if (w.get(key) > 0) {
                 return false;
             }
         }
+        
         return true;
     }
 }
