@@ -3,25 +3,21 @@ import java.util.*;
 class Solution {
     public long solution(int n, int[] works) {
         PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
-        for (int i = 0; i < works.length; i++) {
-            pq.offer(works[i]);
-        }
-        
-        for (int i = 0; i < n; i++) {
-            if (pq.isEmpty()) {
-                break;
-            }
-            
-            int max = pq.poll();
-            if (max - 1 > 0) {
-                pq.offer(max - 1);
-            }
-        }
-        
         long answer = 0;
+        
+        for (int i : works) {
+            pq.offer(i);
+        }
+        
+        while (!pq.isEmpty() && n-- > 0) {
+            int i = pq.poll();
+            if (i > 1) {
+                pq.offer(i - 1);
+            }
+        }
+        
         while (!pq.isEmpty()) {
-            int job = pq.poll();
-            answer += Math.pow(job, 2);
+            answer += Math.pow(pq.poll(), 2);
         }
         
         return answer;
