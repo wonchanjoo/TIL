@@ -1,10 +1,10 @@
 # [level 0] 특수문자 출력하기 - 181948 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/181948) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/181948?language=cpp) 
 
 ### 성능 요약
 
-메모리: 7.08 MB, 시간: 11.32 ms
+메모리: 4.23 MB, 시간: 1.57 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2024년 06월 15일 17:30:43
+2024년 11월 05일 23:05:53
 
 ### 문제 설명
 
