@@ -8,16 +8,13 @@ int main(void) {
     string str;
     cin >> str;
     
-    string answer = "";
-    for (int i = 0; i < str.length(); i++) {
-        if (str[i] >= 'a' && str[i] <= 'z') {
-            answer += toupper(str[i]);
+    for (char c : str) {
+        if (islower(c)) {
+            cout << char(toupper(c));
         } else {
-            answer += tolower(str[i]);
+            cout <<  char(tolower(c));
         }
     }
-    
-    cout << answer;
     
     return 0;
 }
