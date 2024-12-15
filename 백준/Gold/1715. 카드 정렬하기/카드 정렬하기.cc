@@ -1,4 +1,3 @@
-#define MAX 1000001
 #include <iostream>
 #include <queue>
 
